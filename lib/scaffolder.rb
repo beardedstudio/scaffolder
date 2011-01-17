@@ -1,0 +1,1 @@
+require 'scaffolder/engine' if defined?(Rails)
