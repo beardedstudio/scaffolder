@@ -25,13 +25,22 @@ namespace :scaffolder do
   def red(text)
     puts_in_color text, :color => :red
   end
+
+  desc "Set up config dir"
+  task :setup => :environment do
+    config_dir = File.expand_path('config/scaffolder', Rails.root)
+    mkdir config_dir unless File.exists? config_dir
+    source_file = File.expand_path('../../../config/scaffolder/model.yml', __FILE__)
+    dest_file = File.expand_path('model.yml', config_dir)
+    copy_file source_file, dest_file
+  end
   
   desc "Generate scaffolds from model input"
-  task :generate, :config, :command, :needs => :environment do |t, args|
-    config_file = args[:config].blank? ? 'config/model.yml' : args[:config]
+  task :generate, :model, :command, :needs => :environment do |t, args|
+    model_file = args[:model].blank? ? 'model' : args[:model]
     scaffold_command = args[:command].blank? ? 'scaffold' : args[:command]
 
-    models = YAML.load_file(config_file)
+    models = YAML.load_file(File.expand_path('config/scaffolder/%s.yml' % model_file, Rails.root))
     models.each do |modelname, fields|
       # assemble the scaffold command
       fieldstring = ''
@@ -51,7 +60,7 @@ namespace :scaffolder do
       puts "Running:"
       green command
       # send the command to the os
-      system(command)
+      # system(command)
     end
   end
 

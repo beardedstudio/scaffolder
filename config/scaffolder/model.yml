@@ -1,0 +1,6 @@
+ModelOne:
+  - name: string
+
+ModelTwo:
+  - model_one: references
+  - name: string
