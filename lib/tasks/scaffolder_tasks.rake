@@ -57,7 +57,7 @@ namespace :scaffolder do
         if fields[0]['field'].nil?
           # supporting shorter syntax
           fields.each do |field|
-            value = field.collect { |field, type| " %s:%s" % [field, type] }
+            value = field.collect { |field, type| " %s:%s" % [field, type] }[0]
             fieldstring << value.to_s
           end
         else
