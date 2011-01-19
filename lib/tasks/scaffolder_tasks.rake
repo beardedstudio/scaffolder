@@ -27,7 +27,7 @@ namespace :scaffolder do
   end
 
   desc "Set up config dir"
-  task :setup => :environment do
+  task :install => :environment do
     config_dir = File.expand_path('config/scaffolder', Rails.root)
     mkdir config_dir unless File.exists? config_dir
     source_file = File.expand_path('../../../config/scaffolder/model.yml', __FILE__)
@@ -36,12 +36,21 @@ namespace :scaffolder do
   end
   
   desc "Generate scaffolds from model input"
-  task :generate, :model, :command, :needs => :environment do |t, args|
+  task :generate, :model, :command, :destroy, :needs => :environment do |t, args|
     model_file = args[:model].blank? ? 'model' : args[:model]
     scaffold_command = args[:command].blank? ? 'scaffold' : args[:command]
+    destroy = args[:destroy].blank? ? false : (args[:command] != 'false')
 
     models = YAML.load_file(File.expand_path('config/scaffolder/%s.yml' % model_file, Rails.root))
     models.each do |modelname, fields|
+
+      if destroy
+        command = "rails destroy %s %s\n" % [scaffold_command, modelname]
+        puts "Running:"
+        red command
+        system(command)
+      end
+
       # assemble the scaffold command
       fieldstring = ''
       if !fields.nil?
@@ -60,7 +69,7 @@ namespace :scaffolder do
       puts "Running:"
       green command
       # send the command to the os
-      # system(command)
+      system(command)
     end
   end
 
