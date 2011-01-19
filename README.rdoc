@@ -1,7 +1,7 @@
 = scaffolder
 
 To create your configuration files, use the following command. 
-    rake scaffolder:setup
+    rake scaffolder:install
 
 Edit your model.yml file to include your models and run the generate command:
     rake scaffolder:generate
