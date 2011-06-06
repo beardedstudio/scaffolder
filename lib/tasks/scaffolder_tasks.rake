@@ -36,7 +36,7 @@ namespace :scaffolder do
   end
   
   desc "Generate scaffolds from model input"
-  task :generate, :model, :command, :destroy, :needs => :environment do |t, args|
+  task [:generate, :model, :command, :destroy] => :environment do |t, args|
     model_file = args[:model].blank? ? 'model' : args[:model]
     scaffold_command = args[:command].blank? ? 'scaffold' : args[:command]
     destroy = args[:destroy].blank? ? false : (args[:command] != 'false')
